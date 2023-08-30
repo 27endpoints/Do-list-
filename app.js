@@ -23,12 +23,13 @@ document.addEventListener("DOMContentLoaded", function () {
 //cosmdb azure functionality
 const cosmos = require("@azure/cosmos");
 
-const endpoint = "https://d976a932-0ee0-4-231-b9ee.documents.azure.com:443/";
-const key = process.env.COSMOS_DB_KEY;
+const primaryConnectionString = process.env.COSMOS_DB_KEY_CONNECTION_STRING;
 const databaseId = "sampleDB";
 const containerId = "tasks";
 
-const client = new cosmos.CosmosClient({ endpoint, key });
+const client = new cosmos.CosmosClient({
+  connectionString: primaryConnectionString,
+});
 
 async function createTask(task) {
   const database = client.database(databaseId);
