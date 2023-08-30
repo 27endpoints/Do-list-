@@ -20,3 +20,28 @@ document.addEventListener("DOMContentLoaded", function () {
     // Your createTask implementation using Cosmos DB
   }
 });
+//cosmdb azure functionality
+const cosmos = require("@azure/cosmos");
+
+const endpoint = "https://d976a932-0ee0-4-231-b9ee.documents.azure.com:443/";
+const key = process.env.COSMOS_DB_KEY;
+const databaseId = "sampleDB";
+const containerId = "tasks";
+
+const client = new cosmos.CosmosClient({ endpoint, key });
+
+async function createTask(task) {
+  const database = client.database(databaseId);
+  const container = database.container(containerId);
+
+  const { resource: createdTask } = await container.items.create(task);
+  return createdTask;
+}
+
+async function getTasks() {
+  const database = client.database(databaseId);
+  const container = database.container(containerId);
+
+  const { resources: tasks } = await container.items.readAll().fetchAll();
+  return tasks;
+}
